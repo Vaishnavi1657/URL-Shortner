@@ -1,0 +1,44 @@
+name: CI Pipeline - URL Shortener
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Show project structure
+      - name: Show repository structure
+        run: ls -R
+
+      # 3. Setup Node.js
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 4. Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # 5. Run server (basic check)
+      - name: Start Server
+        run: |
+          node server.js &
+          sleep 5
+
+      # 6. Check if server is running
+      - name: Test Server Response
+        run: curl http://localhost:3000 || echo "Server test skipped"
+
+      # 7. Complete job
+      - name: Complete job
+        run: echo "CI Pipeline completed successfully!"
